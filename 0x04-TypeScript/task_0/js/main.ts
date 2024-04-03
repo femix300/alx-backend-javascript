@@ -22,6 +22,10 @@ const student2: Student = {
 const studentList: Array<Student> = [student1, student2];
 
 
+/**
+ * Adds students to a table
+ * @param students THe list of students
+ */
 export const addStudents = (students: Array<Student>): void => {
     const table = document.createElement('table');
     const headerRow = document.createElement('tr');
