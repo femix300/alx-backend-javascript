@@ -1,5 +1,10 @@
 const fs = require('fs');
 
+/**
+ * This program reads a csv file and counts the number of students in it
+ * @param {string} path: Path to the csv file.
+ */
+
 function countStudents (path) {
   try {
     const data = fs.readFileSync(path, 'utf-8');
@@ -32,5 +37,4 @@ function countStudents (path) {
     throw new Error('Cannot load the database');
   }
 }
-
 module.exports = countStudents;
