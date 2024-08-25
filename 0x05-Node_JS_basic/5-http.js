@@ -4,7 +4,7 @@ const fs = require('fs').promises;
 const port = 1245;
 const databaseFile = process.argv[2];
 
-function countStudents (path) {
+function countStudents(path) {
   const fields = {};
   let length = 0;
   return fs.readFile(path, 'utf8')
