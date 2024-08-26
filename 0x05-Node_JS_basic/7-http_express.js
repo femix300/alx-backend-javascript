@@ -39,12 +39,11 @@ app.get('/', (req, res) => {
 });
 
 app.get('/students', (req, res) => {
-  if (!databaseFile) {
-    return res.status(404).send('Cannot load the database');
-  }
-  return countStudents(databaseFile)
+  countStudents(databaseFile)
     .then((printOut) => res.send(`This is the list of our students\n${printOut}`))
-    .catch(() => res.status(404).send('Cannot load the database'));
+    .catch(() => {
+      res.send('This is the list of our students\nCannot load the database');
+    });
 });
 
 app.listen(port);
