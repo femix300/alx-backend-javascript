@@ -44,7 +44,6 @@ app.get('/students', (req, res) => {
       res.send(`This is the list of our students\n${printOut}`);
     })
     .catch(() => {
-      res.statusCode = 404;
       res.status(404).send('Cannot load the database');
     });
 });
