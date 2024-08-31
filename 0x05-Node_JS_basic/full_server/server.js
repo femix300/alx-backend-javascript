@@ -1,11 +1,11 @@
 import express from 'express';
-import routes from './routes/index.js';
+import mapRoutes from './routes/index';
 
 const port = 1245;
 
 const app = express();
-app.use('/', routes);
 
+mapRoutes(app);
 app.listen(port);
 
 export default app;
