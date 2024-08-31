@@ -1,41 +1,34 @@
 import fs from 'fs';
 
-const readDatabase = (dataPath) => new Promise((resolve, reject) => {
-  if (!dataPath) {
-    reject(new Error('Cannot load the database'));
-  }
-  if (dataPath) {
-    fs.readFile(dataPath, (err, data) => {
+function readDatabase(path) {
+  return new Promise((resolve, reject) => {
+    if (!path) {
+      reject(new Error('Cannot load the database'));
+    }
+    fs.readFile(path, 'utf8', (err, data) => {
       if (err) {
         reject(new Error('Cannot load the database'));
       }
-      if (data) {
-        const fileLines = data
-          .toString('utf-8')
-          .trim()
-          .split('\n');
-        const studentGroups = {};
-        const dbFieldNames = fileLines[0].split(',');
-        const studentPropNames = dbFieldNames
-          .slice(0, dbFieldNames.length - 1);
 
-        for (const line of fileLines.slice(1)) {
-          const studentRecord = line.split(',');
-          const studentPropValues = studentRecord
-            .slice(0, studentRecord.length - 1);
-          const field = studentRecord[studentRecord.length - 1];
-          if (!Object.keys(studentGroups).includes(field)) {
-            studentGroups[field] = [];
+      try {
+        const fields = {};
+        const lines = data.split('\n').filter((line) => line.trim() !== '');
+
+        for (let i = 1; i < lines.length; i += 1) {
+          const [firstname, , , field] = lines[i].split(',');
+          if (!fields[field]) {
+            fields[field] = [];
           }
-          const studentEntries = studentPropNames
-            .map((propName, idx) => [propName, studentPropValues[idx]]);
-          studentGroups[field].push(Object.fromEntries(studentEntries));
+          fields[field].push(firstname);
         }
-        resolve(studentGroups);
+
+        resolve(fields);
+      } catch (error) {
+        reject(new Error('Cannot load the database'));
       }
     });
-  }
-});
+  });
+}
 
 export default readDatabase;
 module.exports = readDatabase;
