@@ -3,7 +3,6 @@ import readDatabase from '../utils.js'; // Import the default export
 class StudentsController {
   static async getAllStudents(request, response) {
     try {
-      console.log('the code enters this try block');
       const databasePath = process.argv.length > 2 ? process.argv[2] : '';
       const fields = await readDatabase(databasePath);
 
