@@ -22,3 +22,4 @@ async function readDatabase(path) {
 }
 
 export default readDatabase;
+module.exports = readDatabase;

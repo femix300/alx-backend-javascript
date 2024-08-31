@@ -15,3 +15,4 @@ router.get('/students/:major', (request, response) => {
 });
 
 export default router;
+module.exports = router;

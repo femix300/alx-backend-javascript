@@ -1,4 +1,4 @@
-import readDatabase from '../utils.js'; // Import the default export
+import readDatabase from '../utils'; // Import the default export
 
 class StudentsController {
   static async getAllStudents(request, response) {
@@ -16,14 +16,9 @@ class StudentsController {
       }
 
       output = output.trim();
-
-      response.statusCode = 200;
-      response.write(output);
-      response.end();
+      response.status(200).send(output);
     } catch (error) {
-      response.statusCode = 500;
-      response.write('Cannot load the database');
-      response.end();
+      response.status(500).send('Cannot load the database');
     }
   }
 
@@ -36,16 +31,12 @@ class StudentsController {
       const { major } = request.params;
 
       if (!acceptedMajors.includes(major)) {
-        response.statusCode = 500;
-        response.write('Major parameter must be CS or SWE');
-        response.end();
+        response.status(500).send('Major parameter must be CS or SWE');
         return;
       }
 
       if (!fields[major]) {
-        response.statusCode = 500;
-        response.write('Cannot load the database');
-        response.end();
+        response.status(500).send('Cannot load the database');
         return;
       }
 
@@ -56,11 +47,10 @@ class StudentsController {
       response.write(output);
       response.end();
     } catch (error) {
-      response.statusCode = 500;
-      response.write('Cannot load the database');
-      response.end();
+      response.status(500).send('Cannot load the database');
     }
   }
 }
 
 export default StudentsController;
+module.exports = StudentsController;
