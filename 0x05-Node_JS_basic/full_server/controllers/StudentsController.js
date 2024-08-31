@@ -1,5 +1,12 @@
+/**
+ * Contains the student-related route handlers.
+ * Handles requests to retrieve all students or filter students by major.
+ */
 import readDatabase from '../utils';
 
+/**
+ * These is a list of Accepted Majors
+ */
 const acceptedMajors = ['CS', 'SWE'];
 
 class StudentsController {

@@ -1,3 +1,11 @@
+/**
+ * Reads and processes the student database file.
+ * Returns a promise that resolves with an object
+ * containing student first names grouped by their field of study.
+ *
+ * Rejects the promise if the database cannot be loaded or parsed.
+ */
+
 import fs from 'fs';
 
 function readDatabase(path) {

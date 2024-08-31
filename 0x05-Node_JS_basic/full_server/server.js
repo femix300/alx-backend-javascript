@@ -1,3 +1,8 @@
+/**
+ * Initializes the Express application and maps routes.
+ * Starts the server on a specified port.
+ */
+
 import express from 'express';
 import mapRoutes from './routes/index';
 
