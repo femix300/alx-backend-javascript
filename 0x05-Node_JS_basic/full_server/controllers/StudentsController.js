@@ -1,63 +1,52 @@
 import readDatabase from '../utils';
 
-const VALID_MAJORS = ['CS', 'SWE'];
-
 class StudentsController {
-  static getAllStudents(request, response) {
-    const dataPath = process.argv.length > 2 ? process.argv[2] : '';
+  static async getAllStudents(request, response) {
+    try {
+      const databasePath = process.argv.length > 2 ? process.argv[2] : '';
+      const fields = await readDatabase(databasePath);
 
-    readDatabase(dataPath)
-      .then((studentGroups) => {
-        const responseParts = ['This is the list of our students'];
-        const cmpFxn = (a, b) => {
-          if (a[0].toLowerCase() < b[0].toLowerCase()) {
-            return -1;
-          }
-          if (a[0].toLowerCase() > b[0].toLowerCase()) {
-            return 1;
-          }
-          return 0;
-        };
+      let output = 'This is the list of our students\n';
+      const sortedFields = Object.keys(fields).sort();
 
-        for (const [field, group] of Object.entries(studentGroups).sort(cmpFxn)) {
-          responseParts.push([
-            `Number of students in ${field}: ${group.length}.`,
-            'List:',
-            group.map((student) => student.firstname).join(', '),
-          ].join(' '));
+      for (const field of sortedFields) {
+        if (Object.prototype.hasOwnProperty.call(fields, field)) {
+          output += `Number of students in ${field}: ${fields[field].length}. List: ${fields[field].join(', ')}\n`;
         }
-        response.status(200).send(responseParts.join('\n'));
-      })
-      .catch((err) => {
-        response
-          .status(500)
-          .send(err instanceof Error ? err.message : err.toString());
-      });
+      }
+
+      output = output.trim();
+      response.status(200).send(output);
+    } catch (error) {
+      response.status(500).send('Cannot load the database');
+    }
   }
 
-  static getAllStudentsByMajor(request, response) {
-    const dataPath = process.argv.length > 2 ? process.argv[2] : '';
-    const { major } = request.params;
+  static async getAllStudentsByMajor(request, response) {
+    try {
+      const acceptedMajors = ['CS', 'SWE'];
+      const databasePath = process.argv.length > 2 ? process.argv[2] : '';
+      const fields = await readDatabase(databasePath);
 
-    if (!VALID_MAJORS.includes(major)) {
-      response.status(500).send('Major parameter must be CS or SWE');
-      return;
+      const { major } = request.params;
+
+      if (!acceptedMajors.includes(major)) {
+        response.status(500).send('Major parameter must be CS or SWE');
+        return;
+      }
+
+      if (!fields[major]) {
+        response.status(500).send('Cannot load the database');
+        return;
+      }
+
+      const firstNames = fields[major];
+      const output = `List: ${firstNames.join(', ')}`;
+
+      response.status(200).send(output);
+    } catch (error) {
+      response.status(500).send('Cannot load the database');
     }
-    readDatabase(dataPath)
-      .then((studentGroups) => {
-        let responseText = '';
-
-        if (Object.keys(studentGroups).includes(major)) {
-          const group = studentGroups[major];
-          responseText = `List: ${group.map((student) => student.firstname).join(', ')}`;
-        }
-        response.status(200).send(responseText);
-      })
-      .catch((err) => {
-        response
-          .status(500)
-          .send(err instanceof Error ? err.message : err.toString());
-      });
   }
 }
 
